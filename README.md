@@ -80,6 +80,26 @@ Each Spring Boot service lives in its own folder and can be built independently.
 
 ---
 
+## Shared Dependency Management (Parent POM)
+
+To ensure consistency and simplify dependency versioning across the multiple microservices in this demo (User Service, Inventory Service, Order Service), a Maven parent `pom.xml` file is located at the root of the project.
+
+This `pom.xml` serves the following key purposes:
+
+*   **Centralized Version Control:** It defines versions for common dependencies (like Spring Boot, Spring Cloud, Logstash Logback Encoder, etc.) in its `<properties>` section. This means all child microservice modules will inherit these versions, ensuring they use the same library releases.
+*   **Consistent Dependency Set:** The `<dependencyManagement>` section declares a common set of dependencies and their versions. Child modules can then include these dependencies without specifying a version, guaranteeing they use the version defined in the parent. This does not force all modules to use every dependency listed, but rather provides a curated list of compatible versions if a module needs them.
+*   **Simplified Updates:** When a library needs to be updated (e.g., a new Spring Boot release), the version can be changed in this single parent `pom.xml`, and all child modules will pick up the new version upon their next build.
+
+**Importance of Version Alignment:**
+Aligning dependency versions, especially within an ecosystem like Spring (Spring Boot, Spring Cloud), is crucial for:
+    *   **Compatibility:** Ensures that different libraries work together as expected without conflicts.
+    *   **Stability:** Helps avoid runtime errors, `NoSuchMethodError` exceptions, or other classpath-related issues that can arise from version mismatches.
+    *   **Security:** Using up-to-date, compatible versions often includes the latest security patches.
+
+The individual microservices (once created as per subsequent tickets) will declare this root `pom.xml` as their parent to inherit these benefits. The versions for the observability *tools* themselves (like Docker images for Zipkin, ELK, Prometheus, Grafana) are managed within their respective `docker-compose.yml` files in the `docker/` directory.
+
+---
+
 ## Setup Observability Tools
 
 ### Tracing Server (Zipkin)

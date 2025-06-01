@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example.observability</groupId>
+    <artifactId>observability-demo-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Observability Demo Parent</name>
+    <description>Parent POM for the Observability Demo microservices, managing shared dependency versions.</description>
+
+    <properties>
+        <!--
+            Centralized Dependency Versions:
+            This section defines versions for key frameworks and libraries.
+            Managing versions in one place (the parent POM) ensures consistency across all child microservice modules
+            and simplifies updates. Changing a version here propagates it to all modules that inherit from this POM.
+        -->
+        <!-- Core Frameworks -->
+        <java.version>17</java.version> <!-- Sets the Java version for compilation -->
+        <spring-boot.version>3.2.0</spring-boot.version> <!-- Defines the Spring Boot version -->
+        <spring-cloud.version>2023.0.0</spring-cloud.version> <!-- Defines the Spring Cloud release train version -->
+
+        <!-- Logging - for ELK Stack integration -->
+        <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version> <!-- Version for structured logging -->
+
+        <!-- Maven Plugins -->
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <!--
+            Shared Dependency Management:
+            This section declares dependencies and their versions that child modules can use.
+            Unlike adding dependencies directly in the <dependencies> tag of a parent POM,
+            <dependencyManagement> does not mean all child modules will automatically get these dependencies.
+            Instead, it provides a centralized place to define the version and scope of dependencies.
+            Child modules must still explicitly declare a dependency (without specifying the version)
+            if they need it, and they will inherit the version defined here.
+            This ensures version consistency across modules for shared libraries.
+            Version Alignment Importance: Using compatible versions of libraries (e.g., Spring Boot and Spring Cloud)
+            is crucial to avoid runtime errors, classpath conflicts, and unexpected behavior.
+            This BOM (Bill of Materials) approach helps maintain that compatibility.
+        -->
+        <dependencies>
+            <!-- Spring Boot Bill of Materials (BOM) -->
+            <!-- This imports all Spring Boot managed versions, ensuring consistency for Spring Boot starters -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Spring Cloud Bill of Materials (BOM) -->
+            <!-- This imports all Spring Cloud managed versions for Sleuth, Zipkin client etc., aligned with Spring Boot -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Centralized Logging with Logstash -->
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${logstash-logback-encoder.version}</version>
+            </dependency>
+
+            <!-- Micrometer Prometheus Registry (for metrics) -->
+            <!-- Version for this is typically managed by the Spring Boot BOM. -->
+            <!-- Declaring it here ensures any module using it gets this centrally defined (and Spring-Boot-recommended) version. -->
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-prometheus</artifactId>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Spring Boot Maven Plugin -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+                <!-- Maven Compiler Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>
