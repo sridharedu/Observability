@@ -1,8 +1,7 @@
 # Observability
 
 # Observability Demo Project
-You are an expert Spring Boot architect and observability engineer. I want you to generate a complete learning demo project—no complex business logic, just the instrumentation pieces—so that any developer can clone it and immediately see how to add distributed tracing, centralized logging, metrics, and monitoring to a set of simple microservices.
-This repository contains a simple Spring Boot microservices demo focused exclusively on **distributed tracing**, **centralized logging**, **metrics collection**, and **monitoring**. There is no complex business logic—each service exposes a minimal REST endpoint that invokes the next service in sequence. The goal is to help developers immediately see how to instrument microservices for observability.
+This repository provides a **learning demo project** designed to teach developers how to implement comprehensive observability in a microservices architecture. The project's primary **goals** are to demonstrate **distributed tracing**, **structured logging**, **metrics collection**, and **monitoring** techniques. It utilizes minimal Spring Boot microservices with **no complex business logic**, focusing exclusively on the instrumentation required for observability, allowing any developer to clone it and immediately see these concepts in action.
 
 ---
 
@@ -32,7 +31,7 @@ This repository contains a simple Spring Boot microservices demo focused exclusi
 
 ## Introduction
 
-This demo project consists of three Spring Boot microservices—**User Service**, **Inventory Service**, and **Order Service**—chained together so that each request flows from one service to the next. The focus is on:
+This demo project illustrates key observability concepts using three minimal Spring Boot microservices: **User Service**, **Inventory Service**, and **Order Service**. These services are chained (Order → Inventory → User) to simulate a typical request flow. The **explicit learning focus** of this project is on:
 
 * **Distributed Tracing** with Spring Cloud Sleuth and Zipkin
 * **Centralized JSON Logging** to an ELK stack (Elasticsearch, Logstash, Kibana)
